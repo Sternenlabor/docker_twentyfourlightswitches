@@ -1,0 +1,7 @@
+version: "3"
+services:
+  twentyfourlightswitches:
+    build: ./
+    image: application/twentyfourlightswitches:latest
+    container_name: twentyfourlightswitches
+    restart: unless-stopped
