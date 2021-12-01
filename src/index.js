@@ -41,7 +41,7 @@ const run = () => {
         console.log(dataStr);
 
         const options = {
-            hostname: "192.168.200.141",
+            hostname: "WLED-Fenster-2OG",
             port: 80,
             path: "/json/state",
             method: "POST",
