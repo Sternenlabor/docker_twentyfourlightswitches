@@ -1,60 +1,40 @@
+
+const calendar_days = require("./calendar_days.json");
 const wled = require("./wled.json");
-const wled_segment = require("./wled_segment.json");
+const wled_segment_off = require("./wled_segment_off.json");
+const wled_segment_candle_effect = require("./wled_segment_candle_effect.json");
 const http = require("http");
 
-const colorPerDay = {
-    1: {
-        window: 1,
-        color: [255, 0, 0]
-    },
-    2: {
-        window: 2,
-        color: [0, 255, 0]
-    },
-    3: {
-        window: 3,
-        color: [0, 0, 255]
-    }
-};
-
-//START: DEMO CODE
-let j = 0;
-//END: DEMO CODE
-
-setInterval(() => {
+const run = () => {
 
     const today = new Date();
-    let day = today.getDate(); // 24
-    let month = today.getMonth() + 1; // 10 (Month is 0-based, so 10 means 11th Month)
-
-    //START: DEMO CODE
-    month = 12;
-    if (++j > 3) {
-        j = 1;
-    }
-    day = j;
-    //END: DEMO CODE
+    const day = today.getDate(); // 24
+    const month = today.getMonth() + 1; // 10 (Month is 0-based, so 10 means 11th Month)
 
     if (month == 12) {
 
         const data = JSON.parse(JSON.stringify(wled));
 
-        for (i = 0; i < 10; i++) {
-            const seg = JSON.parse(JSON.stringify(wled_segment));
+        // reset all
+        for (let i = 0; i < 10; i++) {
+            const seg = JSON.parse(JSON.stringify(wled_segment_off));
             seg.id = i;
             seg.start = i * 40;
             seg.stop = seg.start + 40;
-            wled.seg[i] = seg;
+            data.seg[i] = seg;
         }
 
-        /*
-        const seg = JSON.parse(JSON.stringify(wled_segment));
-        seg.col[0] = colorPerDay[day].color;
-        seg.id = colorPerDay[day].window - 1;
-        seg.start = (colorPerDay[day].window - 1) * 40;
-        seg.stop = seg.start + 40;
-        wled.seg[colorPerDay[day].window - 1] = seg;
-        */
+        // enable the candle effect until the current day is reached
+        for (let i = 0; i < calendar_days.length; i++) {
+            const cDay = calendar_days[i];
+            if (cDay.day <= day) {
+                const seg = JSON.parse(JSON.stringify(wled_segment_candle_effect));
+                seg.id = cDay.window - 1;
+                seg.start = (cDay.window - 1) * 40;
+                seg.stop = seg.start + 40;
+                data.seg[cDay.window - 1] = seg;
+            }
+        }
 
         const dataStr = JSON.stringify(data);
 
@@ -86,5 +66,8 @@ setInterval(() => {
         req.write(dataStr)
         req.end();
     }
+};
 
-}, 1000);
+run(); // initially, run it once
+
+setInterval(run, 1000 * 60 * 5); // run again every 5 minutes
