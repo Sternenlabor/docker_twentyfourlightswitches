@@ -1,0 +1,46 @@
+[
+    {
+        "day": 16,
+        "window": 1
+    },
+    {
+        "day": 21,
+        "window": 2
+    },
+    {
+        "day": 15,
+        "window": 3
+    },
+    {
+        "day": 20,
+        "window": 4
+    },
+    {
+        "day": 14,
+        "window": 5
+    },
+    {
+        "day": 22,
+        "window": 6
+    },
+    {
+        "day": 24,
+        "window": 7
+    },
+    {
+        "day": 19,
+        "window": 8
+    },
+    {
+        "day": 17,
+        "window": 9
+    },
+    {
+        "day": 23,
+        "window": 10
+    },
+    {
+        "day": 18,
+        "window": 11
+    }
+]

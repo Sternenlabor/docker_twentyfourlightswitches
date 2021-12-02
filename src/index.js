@@ -1,11 +1,12 @@
 
-const calendar_days = require("./calendar_days.json");
+const calendar_days_OG2 = require("./calendar_days_OG2.json");
+const calendar_days_OG3 = require("./calendar_days_OG3.json");
 const wled = require("./wled.json");
 const wled_segment_off = require("./wled_segment_off.json");
 const wled_segment_candle_effect = require("./wled_segment_candle_effect.json");
 const http = require("http");
 
-const run = () => {
+const run = (calendar_days, host) => {
 
     const today = new Date();
     const day = today.getDate(); // 24
@@ -16,7 +17,7 @@ const run = () => {
         const data = JSON.parse(JSON.stringify(wled));
 
         // reset all
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < calendar_days.length; i++) {
             const seg = JSON.parse(JSON.stringify(wled_segment_off));
             seg.id = i;
             seg.start = i * 40;
@@ -41,7 +42,7 @@ const run = () => {
         console.log(dataStr);
 
         const options = {
-            hostname: "WLED-Fenster-2OG",
+            hostname: host,
             port: 80,
             path: "/json/state",
             method: "POST",
@@ -68,6 +69,11 @@ const run = () => {
     }
 };
 
-run(); // initially, run it once
+const runAll = () => {
+    run(calendar_days_OG2, "WLED-Fenster-2OG");
+    run(calendar_days_OG3, "WLED-Fenster-3OG");
+}
 
-setInterval(run, 1000 * 60 * 5); // run again every 5 minutes
+runAll(); // initially, run it once
+
+setInterval(runAll, 1000 * 60 * 5); // run again every 5 minutes
